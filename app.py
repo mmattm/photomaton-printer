@@ -32,7 +32,8 @@ printer = Usb(PRINTER_VENDOR_ID, PRINTER_PRODUCT_ID)
 
 def prepare_image(image_path, printer_width):
     """
-    Load an image, resize it to fit the printer width, and convert it to grayscale.
+    Load an image, resize it to fit the printer width, rotate it by 180 degrees,
+    and convert it to grayscale.
     :param image_path: Path to the image file
     :param printer_width: Width of the printer in pixels
     :return: A processed PIL Image object
@@ -45,11 +46,13 @@ def prepare_image(image_path, printer_width):
     new_height = int(printer_width * aspect_ratio)
 
     # Resize the image to fit the printer width
-    # Adjust the resampling filter based on your Pillow version
     img_resized = img.resize((printer_width, new_height), Image.Resampling.LANCZOS)
 
+    # Rotate the image by 180 degrees
+    img_rotated = img_resized.rotate(180)
+
     # Convert to grayscale
-    img_gray = img_resized.convert("L")
+    img_gray = img_rotated.convert("L")
 
     return img_gray
 
