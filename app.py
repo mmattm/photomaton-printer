@@ -30,6 +30,11 @@ printer_width_pixels = 560  # Example width, adjust based on your printer's spec
 printer = Usb(PRINTER_VENDOR_ID, PRINTER_PRODUCT_ID)
 
 
+@app.route("/")
+def hello():
+    return "Hello, World!"
+
+
 def prepare_image(image_path, printer_width):
     """
     Load an image, resize it to fit the printer width, rotate it by 180 degrees,
@@ -86,20 +91,30 @@ def print_images():
 
                     # Process and print the image
                     processed_image = prepare_image(tmp_file.name, printer_width_pixels)
-                    printer._raw(b"\x1b\x64\x06")  # Feed
+                    printer._raw(b"\x1b\x64\x08")  # Feed
                     printer._raw(b"\x1b\x61\x00")  # Center align
                     printer.image(processed_image)
-                    printer._raw(b"\x1b\x64\x06")  # Feed
+                    printer._raw(b"\x1b\x64\x08")  # Feed
                     time.sleep(1)  # Delay between prints if needed
             else:
                 print(f"Failed to download image from {url}")
 
-        printer.cut()  # Optionally, move this outside the loop if you want all images as part of a single printout
+        # printer.cut()  # Optionally, move this outside the loop if you want all images as part of a single printout
         # reset printer
         printer._raw(b"\x1B\x40")
 
         return jsonify({"message": "Images printed successfully"}), 200
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# function to cut paper only
+@app.route("/cut-paper", methods=["POST"])
+def cut_paper():
+    try:
+        printer.cut()
+        return jsonify({"message": "Paper cut successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
