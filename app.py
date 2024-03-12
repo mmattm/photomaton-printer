@@ -92,9 +92,9 @@ def print_images():
                     # Process and print the image
                     processed_image = prepare_image(tmp_file.name, printer_width_pixels)
                     printer._raw(b"\x1b\x64\x08")  # Feed
-                    printer._raw(b"\x1b\x61\x00")  # Center align
+                    printer._raw(b"\x1b\x61\x01")  # Center align
                     printer.image(processed_image)
-                    printer._raw(b"\x1b\x64\x08")  # Feed
+                    printer._raw(b"\x1b\x64\x12")  # Feed
                     time.sleep(1)  # Delay between prints if needed
             else:
                 print(f"Failed to download image from {url}")
@@ -114,6 +114,7 @@ def print_images():
 def cut_paper():
     try:
         printer.cut()
+        printer._raw(b"\x1b\x64\x06")
         return jsonify({"message": "Paper cut successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
