@@ -114,7 +114,7 @@ def print_images():
 def cut_paper():
     try:
         printer.cut()
-        printer._raw(b"\x1b\x64\x06")
+        printer._raw(b"\x1b\x64\x12")
         return jsonify({"message": "Paper cut successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
