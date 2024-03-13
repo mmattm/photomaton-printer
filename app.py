@@ -94,7 +94,7 @@ def print_images():
                     printer._raw(b"\x1b\x64\x08")  # Feed
                     printer._raw(b"\x1b\x61\x01")  # Center align
                     printer.image(processed_image)
-                    printer._raw(b"\x1b\x64\x12")  # Feed
+                    printer._raw(b"\x1b\x64\x02")  # Feed
                     time.sleep(1)  # Delay between prints if needed
             else:
                 print(f"Failed to download image from {url}")
