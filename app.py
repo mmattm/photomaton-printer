@@ -7,6 +7,7 @@ import usb.backend.libusb1
 import time  # For introducing delay
 import tempfile  # Import the tempfile module
 import requests
+import logging
 
 
 # Attempt to manually specify the path to the libusb library
@@ -18,6 +19,19 @@ print("Backend:", backend)
 # Try to find any USB device as a test
 dev = usb.core.find(backend=backend)
 print("Device found:", dev)
+
+# Configure logging
+logging.basicConfig(
+    filename="app.log",
+    level=logging.WARNING,
+    format="%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s",
+)
+
+# Your existing setup...
+backend = usb.backend.libusb1.get_backend(
+    find_library=lambda x: "/opt/homebrew/lib/libusb-1.0.dylib"
+)
+logging.info("Backend: %s", backend)
 
 app = Flask(__name__)
 
